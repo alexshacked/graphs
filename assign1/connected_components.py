@@ -61,6 +61,11 @@ class ConnectedComponents:
         n, m = data[0:2]
         data = data[2:]
         edges = list(zip(data[0:(2 * m):2], data[1:(2 * m):2]))
+
+        num_edges_actually = len(edges)
+        if m != num_edges_actually:
+            raise Exception('Wrong input format. Specified %d edges but there are actually % d' % (m, num_edges_actually))
+
         adj = [[] for _ in range(n)]
         for (a, b) in edges:
             adj[a - 1].append(b - 1)
@@ -75,5 +80,9 @@ class ConnectedComponents:
         print(self.number_of_components(adj))
 
 if __name__ == '__main__':
-    islands = ConnectedComponents()
-    islands.do()
+    try:
+        islands = ConnectedComponents()
+        islands.do()
+    except Exception, e:
+        print e.message
+        exit(0)
