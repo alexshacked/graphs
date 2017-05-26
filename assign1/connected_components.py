@@ -50,7 +50,7 @@ class ConnectedComponents:
         return list_input
 
     def read_input(self):
-        list_input = self.load_input_from_file()
+        list_input = self.load_input_from_stdin()
         input = " ".join(list_input)
         data = list(map(int, input.split()))
         return data
@@ -60,11 +60,11 @@ class ConnectedComponents:
 
         n, m = data[0:2]
         data = data[2:]
-        edges = list(zip(data[0:(2 * m):2], data[1:(2 * m):2]))
 
-        num_edges_actually = len(edges)
-        if m != num_edges_actually:
-            raise Exception('Wrong input format. Specified %d edges but there are actually % d' % (m, num_edges_actually))
+        if (2 * m) > len(data):
+            raise Exception(
+                'Wrong input format. Specified %d edges but there are actually % d' % (m, len(data) / 2))
+        edges = list(zip(data[0:(2 * m):2], data[1:(2 * m):2]))
 
         adj = [[] for _ in range(n)]
         for (a, b) in edges:
@@ -85,4 +85,3 @@ if __name__ == '__main__':
         islands.do()
     except Exception, e:
         print e.message
-        exit(0)

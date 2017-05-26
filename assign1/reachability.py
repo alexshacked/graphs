@@ -56,7 +56,15 @@ class Reachability:
 
         n, m = data[0:2]
         data = data[2:]
+
+        if (2 * m) > len(data):
+            raise Exception(
+                'Wrong input format. Specified %d edges but there are actually % d' % (m, len(data) / 2))
         edges = list(zip(data[0:(2 * m):2], data[1:(2 * m):2]))
+
+        if len(data) != (2 * m + 2):
+            raise Exception('Did not specify the nodes pair that need to be checked for connection. It should be the last line')
+
         x, y = data[2 * m:]
         adj = [[] for _ in range(n)]
         x, y = x - 1, y - 1
@@ -72,5 +80,8 @@ class Reachability:
         print(self.reach(adj, x, y))
 
 if __name__ == '__main__':
-    rich = Reachability()
-    rich.do()
+    try:
+        rich = Reachability()
+        rich.do()
+    except Exception, e:
+        print e.message
