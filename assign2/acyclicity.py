@@ -104,7 +104,7 @@ class Acyclicity:
         return list_input
 
     def read_input(self):
-        list_input = self.load_input_from_file()
+        list_input = self.load_input_from_stdin()
         input = " ".join(list_input)
         data = list(map(int, input.split()))
         return data
