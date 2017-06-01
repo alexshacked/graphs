@@ -2,28 +2,97 @@
 
 import sys
 
-def dfs(adj, used, order, x):
-    #write your code here
-    pass
+'read from stdin when submitting'
+class Toposort:
+    ################### DFS algorithm #############################
+    def do_explore_one(self, i, adj, visit, pre, post, clock):
+        visit[i] = True
+        clock = self.contorni(i, clock, pre)
 
+        neigbours = adj[i]
+        for j in neigbours:
+            if visit[j] == False:
+                clock = self.do_explore_one(j, adj, visit, pre, post, clock)
 
-def toposort(adj):
-    used = [0] * len(adj)
-    order = []
-    #write your code here
-    return order
+        clock = self.contorni(i, clock, post)
+        return clock
+
+    def contorni(self, i, clock, buf):
+        buf[i] = clock
+        clock = clock + 1
+        return clock
+
+    def do_explore_all(self, adj, pre, post):
+        clock = 1
+        visit = [False for _ in range(len(adj))]
+        for i in range(len(adj)):
+            if visit[i] == False:
+                clock = self.do_explore_one(i, adj, visit, pre, post, clock)
+
+    def explore(self, adj):
+        pre = [0 for _ in range(len(adj))]
+        post = [0 for _ in range(len(adj))]
+        self.do_explore_all(adj, pre, post)
+        return post
+
+    def toposort(self, adj):
+        #write your code here
+
+        post = self.explore(adj)
+        post_clocks = [(v, clock) for (v, clock) in enumerate(post)]
+        post_clocks_sorted = sorted(post_clocks, key = lambda p: p[1], reverse = True)
+        vertices_sorted = [p[0] for p in post_clocks_sorted]
+
+        return vertices_sorted
+
+    ################# build an adjaency list from the input ######
+    def load_input_from_file(self):
+        f = open('./toposort.txt')
+        return f.readlines()
+
+    def load_input_from_stdin(self):
+        'reads several lines of input and returns it as one string'
+
+        # reading several lines of input
+        # at the end of last line press enter
+        # then press cmd+d (in Intellij) or ctrl+d (in shell)
+        list_input = sys.stdin.readlines()
+        return list_input
+
+    def read_input(self):
+        list_input = self.load_input_from_stdin()
+        input = " ".join(list_input)
+        data = list(map(int, input.split()))
+        return data
+
+    def make_adj_list(self, data):
+        'builds a graph adjency list from the data. data is a list of ints'
+
+        n, m = data[0:2]
+        data = data[2:]
+
+        if (2 * m) > len(data):
+            raise Exception(
+                'Wrong input format. Specified %d edges but there are actually % d' % (m, len(data) / 2))
+        edges = list(zip(data[0:(2 * m):2], data[1:(2 * m):2]))
+
+        adj = [[] for _ in range(n)]
+        for (a, b) in edges:
+            adj[a - 1].append(b - 1)
+
+        return adj
+
+    def do(self):
+        data_str = self.read_input()
+        adj = self.make_adj_list(data_str)
+
+        order = self.toposort(adj)
+        for x in order:
+            print(x + 1),
 
 if __name__ == '__main__':
-    input = sys.stdin.read()
-    data = list(map(int, input.split()))
-    n, m = data[0:2]
-    data = data[2:]
-    edges = list(zip(data[0:(2 * m):2], data[1:(2 * m):2]))
-    adj = [[] for _ in range(n)]
-    for (a, b) in edges:
-        adj[a - 1].append(b - 1)
-    order = toposort(adj)
-    for x in order:
-        print(x + 1)
-        # print(x + 1, end=' ') ! this was the original line. understand it.
-
+    try:
+        topo = Toposort()
+        topo.do()
+    except Exception, e:
+        print e.message
