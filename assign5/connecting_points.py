@@ -145,17 +145,17 @@ class ConnectingPrim:
                 n, c  = onen[0], onen[1]
                 if q.hasVal(n) and dist[n] > c:
                     dist[n], prev[n] = c, v
-
-                    idx = -1
-                    back = adj[n]
-                    for b in range(len(back)):
-                        if back[b] == v:
-                            idx = b; break;
-                    if idx != -1:
-                        adj[n].pop(idx) # the tricky part
-                        cost[n].pop(idx)
-
                     q.changeVal(n, c)
+
+                idx = -1
+                back = adj[n]
+                for b in range(len(back)):
+                    if back[b] == v:
+                        idx = b;
+                        break;
+                if idx != -1:
+                    adj[n].pop(idx)  # the tricky part
+                    cost[n].pop(idx)
 
     def explore(self, adj, cost, s):
         dists = [self.INFINITY if i != s else 0  for i in range(len(adj))]
@@ -164,7 +164,7 @@ class ConnectingPrim:
         return dists
 
     def minimum_distance(self, x, y):
-        self.INFINITY = 1000 * len(x)
+        self.INFINITY = 10000000 * len(x)
 
         adj, cost = self.make_graph_ds(x, y)
         distances = self.explore(adj, cost, 0)
