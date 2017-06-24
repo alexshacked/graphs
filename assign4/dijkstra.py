@@ -16,7 +16,7 @@ class BinHeap:
         return t[1]
 
     def __init__(self):
-        self.heap = [(0, 0)]
+        self.heap = [(0, -5000000)]
         self.size = 0
 
     def empty(self):
@@ -43,7 +43,7 @@ class BinHeap:
     def buildHeap(self, alist):
         i = len(alist) // 2
         self.size = len(alist)
-        self.heap = [(0, 0)] + alist[:]
+        self.heap = [(0, -5000000)] + alist[:]
         while (i > 0):
             self.percDown(i)
             i = i - 1
@@ -61,7 +61,7 @@ class BinHeap:
                 i = n
                 break
 
-        self.heap[i] = (key, self.heap[i][1])
+        self.heap[i] = (key, val)
 
         min_child = self.min(self.heap, i)
         father = i // 2
@@ -129,14 +129,11 @@ class Dijkstra:
         while not q.empty():
             vertex = q.delMin()
             v = vertex[1]
-            neighbours = adj[v]
-            neig_costs = cost[v]
-            for i in range(len(neighbours)):
-                n = neighbours[i]
-                c = neig_costs[i]
+            neighbours = zip(adj[v], cost[v])
+            for onen in neighbours:
+                n, c  = onen[0], onen[1]
                 if dist[n] > dist[v] + c:
-                    dist[n] = dist[v] + c
-                    prev[n] = v
+                    dist[n], prev[n] = dist[v] + c, v
                     q.changeVal(n, dist[n])
 
     def explore(self, adj, cost, s):
